@@ -5,6 +5,18 @@ import leafmap.foliumap as leafmap
 
 asset_metrics = pd.read_csv('data/processed/asset_metrics.csv')
 
+with st.expander('Example Queries:'):
+    st.markdown("""
+    - Plot our properties in **X market/city/zip**
+    - Plot our comps in **X market/city/zip**
+    - Map properties built after **2015**
+    - Plot all properties within **3 miles of downtown Dallas**
+    - Plot our acquisitions in the **last 3 years**
+    - Map our properties that **haven't been renovated since at least 2000**
+    - Plot all properties within **1 mile of the Old Fourth Ward** with **at least 200 units**         
+    - *Any combination of the above ^^*
+    """)
+
 user_input = st.text_area("Input:")
 
 def safe_int(val):
