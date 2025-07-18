@@ -36,7 +36,7 @@ def haversine(lat1, lon1, lat2, lon2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return R * c
 
-You are running in a restricted environment.
+If the user specifies a location (e.g. "Buckhead", "Downtown Atlanta", "Uptown Dallas"), and doesn't ask for a range, assume that its the name of a market or submarket first.You are running in a restricted environment.
 Only the following built‑in functions are available: abs, all, any, bool, chr, dict, divmod, enumerate, filter, float, format, int, isinstance, issubclass, iter, len, list, map, max, min, next, pow, print, range, reversed, round, sorted, str, sum, tuple, zip
 
 Here is a sample of `asset_metrics` to help you understand the structure:

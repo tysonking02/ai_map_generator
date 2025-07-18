@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 import leafmap.foliumap as leafmap
 
+st.title('Text-to-Map Generator')
+
 asset_metrics = pd.read_csv('data/processed/asset_metrics.csv')
 
 with st.expander('Example Queries:'):
@@ -13,11 +15,12 @@ with st.expander('Example Queries:'):
     - Plot all properties within **3 miles of downtown Dallas**
     - Plot our acquisitions in the **last 3 years**
     - Map our properties that **haven't been renovated since at least 2000**
-    - Plot all properties within **1 mile of the Old Fourth Ward** with **at least 200 units**         
+    - Plot all properties within **1 mile of the Old Fourth Ward** with **at least 200 units**   
+    - Map all high-rises within **3 miles of Buckhead**      
     - *Any combination of the above ^^*
     """)
 
-user_input = st.text_area("Input:")
+user_input = st.text_area("Request the information that you'd like to be mapped:")
 
 def safe_int(val):
     return "-" if pd.isna(val) else int(val)

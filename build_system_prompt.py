@@ -43,6 +43,8 @@ def build_system_prompt():
         "- Then filter `asset_metrics` to only include rows where the `distance` is less than or equal to the specified number of miles.\n\n"
         "The haversine function has already been created as follows:\n\n"
         f"{haversine_code}\n\n"
+        "If the user specifies a location (e.g. \"Buckhead\", \"Downtown Atlanta\", \"Uptown Dallas\"), "
+        "and doesn't ask for a range, assume that its the name of a market or submarket first."
         "You are running in a restricted environment.\n"
         f"Only the following built‑in functions are available: {', '.join(safe_builtins)}\n\n"
         "Here is a sample of `asset_metrics` to help you understand the structure:\n\n"
