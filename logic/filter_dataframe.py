@@ -54,7 +54,7 @@ def apply_filter(df: pd.DataFrame, args: dict) -> pd.DataFrame:
         "building_age_filter": "building_age",
         "year_acquired_filter": "year_acquired",
         "year_renovated_filter": "year_renovated",
-        "num_units_filter": "num_units"
+        "num_units_filter": "unit_count"
     }
 
     for arg_key, column in comparison_fields.items():

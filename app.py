@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import leafmap.foliumap as leafmap
+import folium
+from collections.abc import MutableMapping
 
 from agents.orchestrator import orchestrate_filtering
 
@@ -18,6 +20,16 @@ def load_data():
     return pd.read_csv("data/processed/asset_metrics.csv")
 
 asset_metrics = load_data()
+
+def flatten_dict(d, parent_key='', sep='.'):
+    items = []
+    for k, v in d.items():
+        new_key = f"{parent_key}{sep}{k}" if parent_key else k
+        if isinstance(v, MutableMapping):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
 def safe_int(val):
     return "-" if pd.isna(val) else int(val)
@@ -58,6 +70,7 @@ with st.sidebar.expander('Example Queries:'):
         - city
         - state
         - zip code
+    - Plot all comps for **cortland phipps**
     - Map properties built after **2015**
     - Plot all properties within **3 miles of downtown Dallas**
     - Plot our acquisitions in the **last 3 years**
@@ -74,10 +87,11 @@ if submit and user_query.strip():
     try:
         tool_args, filtered = orchestrate_filtering(user_query, asset_metrics)
 
-        with st.sidebar.expander("Filters applied:"):
-            st.dataframe(tool_args)
-
         st.success(f"Found {len(filtered)} matching properties.")
+
+        with st.expander("Filters applied:"):
+            flat_args = flatten_dict(tool_args)
+            st.dataframe(pd.DataFrame(flat_args.items(), columns=["Filter", "Value"]))
     
         with st.expander("Properties found:"):
             st.dataframe(filtered)
@@ -121,6 +135,25 @@ if submit and user_query.strip():
         stroke=False,
         show=True
     )
+
+    if "location_filter" in tool_args:
+        loc = tool_args["location_filter"]
+        if "latitude" in loc and "longitude" in loc:
+            lat = loc["latitude"]
+            lon = loc["longitude"]
+            distance_miles = loc.get("max_distance_miles", 1)
+            distance_meters = distance_miles * 1609.34
+
+            # Add dashed circle
+            folium.Circle(
+                location=[lat, lon],
+                radius=distance_meters,
+                color='blue',
+                fill=False,
+                dash_array='5,5',
+                weight=2
+            ).add_to(m)
+
 
     m.set_center(lat=center_lat, lon=center_lon, zoom=zoom)
 
