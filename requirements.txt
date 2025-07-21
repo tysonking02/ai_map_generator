@@ -3,3 +3,4 @@ leafmap
 datetime
 streamlit
 folium
+openai
