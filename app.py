@@ -97,10 +97,10 @@ if submit and user_query.strip():
             st.dataframe(pd.DataFrame(flat_args.items(), columns=["Filter", "Value"]))
     
         with st.expander("Properties found:"):
-            display_df = filtered[['property_name', 'manager', 'owner', 'property_address', 'city', 'state', 'market_name', 'submarket_name',
+            display_df = filtered[['property_name', 'comp', 'comp_property', 'revpasf', 'manager', 'owner', 'property_address', 'city', 'state', 'market_name', 'submarket_name',
                                    'unit_count', 'number_of_stories', 'style', 'building_age', 'years_since_reno', 'years_since_acquisition',
-                                   'property_quality', 'studio_rent', 'onebed_rent', 'twobed_rent', 'threebed_rent', 'revpasf',
-                                   'comp', 'comp_property']]
+                                   'property_quality', 'studio_rent', 'onebed_rent', 'twobed_rent', 'threebed_rent' ]]
+            
             st.dataframe(display_df)
 
     except Exception as e:
@@ -131,8 +131,11 @@ if submit and user_query.strip():
     m = leafmap.Map()
     m.add_basemap("CartoDB.Positron")
 
+    internal = filtered[filtered["internal"] == True]
+    external = filtered[filtered["internal"] == False]
+
     m.add_circle_markers_from_xy(
-        data=filtered,
+        data=external,
         x='longitude',
         y='latitude',
         popup=['Details'],
@@ -142,6 +145,19 @@ if submit and user_query.strip():
         stroke=False,
         show=True
     )
+
+    cortland_icon = folium.CustomIcon(
+        icon_image='cortland_logo.png',
+        icon_size=(24, 24),
+    )
+
+    for _, row in internal.iterrows():
+        popup = folium.Popup(row["Details"], max_width=300)
+        m.add_marker(
+            location=[row['latitude'], row['longitude']],
+            popup=popup,
+            icon=cortland_icon
+        )
 
     if "location_filter" in tool_args:
         loc = tool_args["location_filter"]
