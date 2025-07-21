@@ -1,0 +1,94 @@
+[
+  {
+    "user": "Show all Cortland properties with at least 200 units in Dallas.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "internal_only": true,
+        "market_filter": "Dallas, TX",
+        "num_units_filter": {
+          "comparison": ">=",
+          "value": 200
+        }
+      }
+    }
+  },
+  {
+    "user": "Find all competitor Garden-style properties built before 2000 in Atlanta.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "comps_only": true,
+        "market_filter": "Atlanta, GA",
+        "style_filter": "Garden",
+        "year_built_filter": {
+          "comparison": "<",
+          "value": 2000
+        }
+      }
+    }
+  },
+  {
+    "user": "List all properties within 3 miles of downtown Atlanta.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "location_filter": {
+          "latitude": 33.75,
+          "longitude": -84.39,
+          "max_distance_miles": 3
+        }
+      }
+    }
+  },
+  {
+    "user": "Get Cortland Mid-Rise properties acquired after 2015 that have more than 300 units.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "internal_only": true,
+        "style_filter": "Mid-Rise",
+        "year_acquired_filter": {
+          "comparison": ">",
+          "value": 2015
+        },
+        "num_units_filter": {
+          "comparison": ">",
+          "value": 300
+        }
+      }
+    }
+  },
+  {
+    "user": "Find Low-Rise properties older than 30 years in Buckhead.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "style_filter": "Low-Rise",
+        "building_age_filter": {
+          "comparison": ">",
+          "value": 30
+        },
+        "location_filter": {
+          "latitude": 33.8492,
+          "longitude": -84.3665,
+          "max_distance_miles": 2
+        }
+      }
+    }
+  },
+  {
+    "user": "Show all internal and comp properties in Austin built after 2010 that are Hi-Rise.",
+    "function_call": {
+      "name": "filter_dataframe",
+      "arguments": {
+        "market_filter": "Austin, TX",
+        "style_filter": "Hi-Rise",
+        "year_built_filter": {
+          "comparison": ">",
+          "value": 2010
+        }
+      }
+    }
+  }
+]
