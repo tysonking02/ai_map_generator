@@ -49,4 +49,4 @@ def orchestrate_filtering(user_query, full_df):
 
     # 6. Apply filters
     filtered_df = apply_filter(full_df, tool_args)
-    return tool_args, filtered_df
+    return tool_args, filtered_df.drop_duplicates(subset='property_id')

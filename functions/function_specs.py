@@ -34,9 +34,9 @@ function_specs = [
                     "description": "Filter by zip code"
                 },
                 "style_filter": {
-                "type": "string",
-                "description": "Filter by style. Must be one of: Mid-Rise, Hi-Rise, Low-Rise, or Garden.",
-                "enum": ["Low-Rise", "Mid-Rise", "Hi-Rise", "Garden"]
+                    "type": "string",
+                    "description": "Filter by style. Must be one of: Mid-Rise, Hi-Rise, Low-Rise, or Garden.",
+                    "enum": ["Low-Rise", "Mid-Rise", "Hi-Rise", "Garden"]
                 },
                 "location_filter": {
                     "type": "object",
@@ -130,6 +130,70 @@ function_specs = [
                 "property_quality_filter": {
                     "type": "object",
                     "description": "Filter properties based on property quality",
+                    "properties": {
+                        "comparison": {
+                            "type": "string",
+                            "enum": [">=", "<=", "==", ">", "<"]
+                        },
+                        "value": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["comparison", "value"]
+                },
+                "pool_filter": {
+                    "type": "boolean",
+                    "description": "If true, include only properties that have a pool"
+                },
+                "concierge_filter": {
+                    "type": "boolean",
+                    "description": "If true, include only properties that have concierge service"
+                },
+                "studio_rent_filter": {
+                    "type": "object",
+                    "description": "Filter properties based on average studio rent",
+                    "properties": {
+                        "comparison": {
+                            "type": "string",
+                            "enum": [">=", "<=", "==", ">", "<"]
+                        },
+                        "value": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["comparison", "value"]
+                },
+                "onebed_rent_filter": {
+                    "type": "object",
+                    "description": "Filter properties based on average one-bedroom rent",
+                    "properties": {
+                        "comparison": {
+                            "type": "string",
+                            "enum": [">=", "<=", "==", ">", "<"]
+                        },
+                        "value": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["comparison", "value"]
+                },
+                "twobed_rent_filter": {
+                    "type": "object",
+                    "description": "Filter properties based on average two-bedroom rent",
+                    "properties": {
+                        "comparison": {
+                            "type": "string",
+                            "enum": [">=", "<=", "==", ">", "<"]
+                        },
+                        "value": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["comparison", "value"]
+                },
+                "threebed_rent_filter": {
+                    "type": "object",
+                    "description": "Filter properties based on average three-bedroom rent",
                     "properties": {
                         "comparison": {
                             "type": "string",

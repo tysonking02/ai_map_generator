@@ -1,0 +1,65 @@
+select *,
+    studio_rent_per_sqft * studio_occupancy * studio_mix +
+    onebed_rent_per_sqft * onebed_occupancy * onebed_mix +
+    twobed_rent_per_sqft * twobed_occupancy * twobed_mix +
+    threebed_rent_per_sqft * threebed_occupancy * threebed_mix +
+    fourbed_rent_per_sqft * fourbed_occupancy * fourbed_mix as revpasf
+from (
+    select 
+        propertyid as property_id,
+        propertyname as property_name,
+        propertyaddress as property_address,
+        city,
+        state,
+        zipcode as zip_code,
+        latitude,
+        longitude,
+        marketname as market_name,
+        submarketname as submarket_name,
+        unitcount as unit_count,
+        starrating as star_rating,
+        buildingclass as building_class,
+        style,
+        yearbuilt as year_built,
+        yearrenovated as year_renovated,
+		year(lastsaledate) as year_acquired,
+        numberofstories as number_of_stories,
+        amenities,
+        ownername as owner_name,
+        propertymanagername as property_manager_name,
+
+		askingrentperunitstudio as studio_rent,
+		askingrentperunitonebedroom as onebed_rent,
+		askingrentperunittwobedroom as twobed_rent,
+		askingrentperunitthreebedroom as threebed_rent,
+		askingrentperunitfourbedroom as fourbed_rent,
+
+        coalesce(effectiverentpersfstudio, 0) as studio_rent_per_sqft,
+        coalesce(100 - vacancypercentagestudio, 0) / 100 as studio_occupancy,
+        coalesce(percentagestudios, 0) / 100 as studio_mix,
+
+        coalesce(effectiverentpersfonebedroom, 0) as onebed_rent_per_sqft,
+        coalesce(100 - vacancypercentageonebedroom, 0) / 100 as onebed_occupancy,
+        coalesce(percentageonebed, 0) / 100 as onebed_mix,
+
+        coalesce(effectiverentpersftwobedroom, 0) as twobed_rent_per_sqft,
+        coalesce(100 - vacancypercentagetwobedroom, 0) / 100 as twobed_occupancy,
+        coalesce(percentagetwobed, 0) / 100 as twobed_mix,
+
+        coalesce(effectiverentpersfthreebedroom, 0) as threebed_rent_per_sqft,
+        coalesce(100 - vacancypercentagethreebedroom, 0) / 100 as threebed_occupancy,
+        coalesce(percentagethreebed, 0) / 100 as threebed_mix,
+
+        coalesce(effectiverentpersffourbedroom, 0) as fourbed_rent_per_sqft,
+        coalesce(100 - vacancypercentagefourbedroom, 0) / 100 as fourbed_occupancy,
+        coalesce(percentagefourbed, 0) / 100 as fourbed_mix
+
+    from dbo.inv_factcostarproperty
+    where secondarytype = 'Apartments' 
+      and buildingstatus = 'Existing' 
+      and avgeffectivepersf is not null
+      and constructionstatus = 'Existing'
+      and renttype = 'Market'
+      and style != 'Single-Family Home'
+	  and iscurrent = 1
+) as base;

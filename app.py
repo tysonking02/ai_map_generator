@@ -40,7 +40,6 @@ def make_details(row, comp):
         f"<br><br><b>Property:</b> {row['property_name']}<br>"
         f"<b>Manager:</b> {row['manager']}<br>"
         f"<b>Owner:</b> {row['owner']}<br>"
-        f"<b>Location:</b> {row['city']}, {row['state']}<br>"
         f"<b>Market:</b> {row['market_name']}<br>"
         f"<b>Submarket:</b> {row['submarket_name']}<br>"
         f"<b>Units:</b> {safe_int(row['unit_count'])}<br>"
@@ -48,7 +47,7 @@ def make_details(row, comp):
         f"<b>Year Built:</b> {safe_int(row['year_built'])}<br>"
         f"<b>Year Renovated:</b> {safe_int(row['year_renovated'])}<br>"
         f"<b>Year Acquired:</b> {safe_int(row['year_acquired'])}<br>"
-        f"<b>Property Quality:</b> {row['property_quality']}<br>"
+        f"<b>Property Quality:</b> {round(row['property_quality'], 3)}<br>"
     )
 
     if comp and not pd.isna(row.get('comp_property')):
@@ -59,26 +58,29 @@ def make_details(row, comp):
 # UI
 st.sidebar.title("Text-to-Map Generator")
 
-with st.sidebar.expander('Example Queries:'):
+with st.sidebar.expander('Features that you can filter:'):
     st.markdown("""
-    - Plot our properties in:
-        - market
-        - city
-        - state
-        - zip code
-    - Plot our comps in:
-        - market
-        - city
-        - state
-        - zip code
-    - Plot all comps for **cortland phipps**
-    - Map properties built after **2015**
-    - Plot all properties within **3 miles of downtown Dallas**
-    - Plot our acquisitions in the **last 3 years**
-    - Map our properties that **haven't been renovated since at least 2000**
-    - Plot all properties within **1 mile of the Old Fourth Ward** with **at least 200 units**   
-    - Map all high-rises within **3 miles of Buckhead**      
-    - *Any combination of the above filters^^*
+    - **Internal/Comps Only:**
+        - Show only **internal Cortland** properties
+        - Show only **competitor** properties
+    - **Comp Property:** Filter by the internal property that a comp is associated with
+    - **Market/City/State/Zip:**
+        - Filter by **market**, **city**, **state**, or **zip code**
+    - **Style:** Filter by building style (Low-Rise, Mid-Rise, Hi-Rise, Garden)
+    - **Location Radius:** 
+        - Provide a location and **max distance in miles** to show nearby properties
+    - **Year Built / Acquired / Renovated:**
+        - e.g., properties **built after 2015**, or **renovated before 2000**
+    - **Building Age:** 
+        - Filter by age of property in years (e.g., **less than 10 years old**)
+    - **Number of Units:**
+        - e.g., properties with **at least 200 units**
+    - **Property Quality Rating:**
+        - Filter by property quality score (0-1 scale)
+    - **Amenities:**
+        - Filter for properties that have a **pool** or **concierge**
+    - **Rent Ranges by Unit Type:**
+        - Filter based on **studio**, **1BR**, **2BR**, or **3BR** rent values
     """)
 
 user_query = st.sidebar.text_input("Enter your query:")
@@ -95,7 +97,11 @@ if submit and user_query.strip():
             st.dataframe(pd.DataFrame(flat_args.items(), columns=["Filter", "Value"]))
     
         with st.expander("Properties found:"):
-            st.dataframe(filtered)
+            display_df = filtered[['property_name', 'manager', 'owner', 'property_address', 'city', 'state', 'market_name', 'submarket_name',
+                                   'unit_count', 'number_of_stories', 'style', 'building_age', 'years_since_reno', 'years_since_acquisition',
+                                   'property_quality', 'studio_rent', 'onebed_rent', 'twobed_rent', 'threebed_rent', 'revpasf',
+                                   'comp', 'comp_property']]
+            st.dataframe(display_df)
 
     except Exception as e:
         st.error(f"Something went wrong:\n\n{str(e)}")

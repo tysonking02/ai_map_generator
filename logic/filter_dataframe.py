@@ -39,6 +39,12 @@ def apply_filter(df: pd.DataFrame, args: dict) -> pd.DataFrame:
     if style := args.get("style_filter"):
         df = df[df["style"] == style]
 
+    if "pool" in args:
+        filtered_df = filtered_df[filtered_df["pool"] == int(args["pool"])]
+
+    if "concierge" in args:
+        filtered_df = filtered_df[filtered_df["concierge"] == int(args["concierge"])]
+
     # Distance filtering
     if loc := args.get("location_filter"):
         lat, lon = loc["latitude"], loc["longitude"]
@@ -55,7 +61,11 @@ def apply_filter(df: pd.DataFrame, args: dict) -> pd.DataFrame:
         "year_acquired_filter": "year_acquired",
         "year_renovated_filter": "year_renovated",
         "num_units_filter": "unit_count",
-        "property_quality_filter": "property_quality"
+        "property_quality_filter": "property_quality",
+        "studio_rent_filter": "studio_rent",
+        "onebed_rent_filter": "onebed_rent",
+        "twobed_rent_filter": "twobed_rent",
+        "threebed_rent_filter": "threebed_rent"
     }
 
     for arg_key, column in comparison_fields.items():

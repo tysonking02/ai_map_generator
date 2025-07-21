@@ -32,6 +32,17 @@ final['years_since_acquisition'] = (datetime.now().year - final['year_acquired']
 
 final['zip_code'] = final['zip_code'].astype(str).str[:5]
 
+all_amenities_series = final['amenities'].dropna().str.split(', ')
+all_amenities_flat = all_amenities_series.explode()
+
+unique_amenities = all_amenities_flat.str.strip().dropna().unique()
+
+for amenity in unique_amenities:
+    col_name = amenity.lower().replace(" ", "_")
+    final[col_name] = final['amenities'].fillna('').apply(lambda x: int(amenity in x))
+
+final.drop(columns='amenities', inplace=True)
+
 final.to_csv('data/processed/asset_metrics.csv')
 
 internal_props = pd.DataFrame(
