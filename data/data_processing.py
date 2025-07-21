@@ -10,6 +10,7 @@ branded_sites = pd.read_csv('data/raw/branded_sites.csv')
 
 final = pd.merge(costar_export, hellodata_costar_ref, left_on='property_id', right_on='costar_id', how='right').dropna(subset='property_id')
 final = pd.merge(final, branded_sites[['property_id', 'manager', 'owner']], on='property_id')
+final = pd.merge(final, hellodata_details.drop(columns=['costar_id', 'property', 'city', 'state']), on='hellodata_id')
 
 internal_ids = master_complist.loc[master_complist['comp'] == master_complist['property'], 'hellodata_id']
 final['internal'] = final['hellodata_id'].isin(internal_ids) | (final['manager'] == "Cortland")

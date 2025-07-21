@@ -22,10 +22,7 @@ Valid parameters include:
 - `year_built_filter`, `building_age_filter`, `year_acquired_filter`, `num_units_filter`: each is an object with:
   - `comparison`: one of [">", ">=", "<", "<=", "=="]
   - `value`: integer
-
-You are running in a restricted environment.
-Only the following built‑in functions are available: {{safe_globals}}
-
+  
 Reference data to guide your decisions:
 
 - Cortland property names:

@@ -126,6 +126,20 @@ function_specs = [
                         }
                     },
                     "required": ["comparison", "value"]
+                },
+                "property_quality_filter": {
+                    "type": "object",
+                    "description": "Filter properties based on property quality",
+                    "properties": {
+                        "comparison": {
+                            "type": "string",
+                            "enum": [">=", "<=", "==", ">", "<"]
+                        },
+                        "value": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["comparison", "value"]
                 }
             }
         }

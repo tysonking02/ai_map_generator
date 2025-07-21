@@ -48,6 +48,7 @@ def make_details(row, comp):
         f"<b>Year Built:</b> {safe_int(row['year_built'])}<br>"
         f"<b>Year Renovated:</b> {safe_int(row['year_renovated'])}<br>"
         f"<b>Year Acquired:</b> {safe_int(row['year_acquired'])}<br>"
+        f"<b>Property Quality:</b> {row['property_quality']}<br>"
     )
 
     if comp and not pd.isna(row.get('comp_property')):

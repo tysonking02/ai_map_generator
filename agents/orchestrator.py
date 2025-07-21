@@ -26,7 +26,7 @@ def orchestrate_filtering(user_query, full_df):
             "content": None,
             "function_call": {
                 "name": ex["function_call"]["name"],
-                "arguments": json.dumps(ex["function_call"]["arguments"])  # ✅ convert to JSON string
+                "arguments": json.dumps(ex["function_call"]["arguments"])
             }
         })
     messages.append({"role": "user", "content": user_query})

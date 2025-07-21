@@ -7,11 +7,6 @@ def build_filter_generator_prompt():
     with open("prompts/system/filter_generator_template.txt", encoding="utf-8") as f:
         template = f.read()
 
-    # Load safe globals
-    with open("system_info/safe_globals.json", encoding="utf-8") as f:
-        safe_globals = json.load(f)["safe_builtins"]
-    safe_globals_str = ", ".join(sorted(safe_globals))
-
     # Load sample data
     sample_df = pd.read_csv("data/processed/asset_metrics.csv").head(5)
     asset_metrics_sample = sample_df.to_string(index=False)
@@ -28,7 +23,6 @@ def build_filter_generator_prompt():
     prompt = (
         template
         .replace("{{today}}", datetime.today().strftime("%Y-%m-%d"))
-        .replace("{{safe_globals}}", safe_globals_str)
         .replace("{{asset_metrics_sample}}", asset_metrics_sample)
         .replace("{{internal_assets}}", internal_assets_str)
         .replace("{{market_names}}", market_names_str)
