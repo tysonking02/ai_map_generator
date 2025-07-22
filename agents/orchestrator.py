@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 from datetime import datetime
+import streamlit as st
 
 from prompts.system.generate_prompt import build_filter_generator_prompt
 from logic.llm_client import call_openai_with_functions
@@ -42,7 +43,6 @@ def orchestrate_filtering(user_query, full_df):
         tool_call = response.choices[0].message.tool_calls[0]
         if tool_call.function.name != "filter_dataframe":
             raise ValueError("Unexpected function call returned")
-
         tool_args = json.loads(tool_call.function.arguments)
     except Exception as e:
         raise RuntimeError(f"Failed to extract tool arguments: {e}")

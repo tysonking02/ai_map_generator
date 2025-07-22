@@ -34,7 +34,7 @@ def flatten_dict(d, parent_key='', sep='.'):
 def safe_int(val):
     return "-" if pd.isna(val) else int(val)
 
-def make_details(row, comp):
+def make_details(row):
     
     details = (
         f"<br><br><b>Property:</b> {row['property_name']}<br>"
@@ -50,12 +50,9 @@ def make_details(row, comp):
         f"<b>Property Quality:</b> {round(row['property_quality'], 3)}<br>"
     )
 
-    if comp and not pd.isna(row.get('comp_property')):
-        details += f"<b>Comp Property:</b> {row['comp_property']}<br>"
-
     return details
 
-# UI
+# Text to Map Generator
 st.sidebar.title("Text-to-Map Generator")
 
 with st.sidebar.expander('Features that you can filter:'):
@@ -78,7 +75,7 @@ with st.sidebar.expander('Features that you can filter:'):
     - **Property Quality Rating:**
         - Filter by property quality score (0-1 scale)
     - **Amenities:**
-        - Filter for properties that have a **pool** or **concierge**
+        - Filter for properties that have a **pool**, **fitness center**, **concierge**, etc.
     - **Rent Ranges by Unit Type:**
         - Filter based on **studio**, **1BR**, **2BR**, or **3BR** rent values
     """)
@@ -96,17 +93,24 @@ if submit and user_query.strip():
             flat_args = flatten_dict(tool_args)
             st.dataframe(pd.DataFrame(flat_args.items(), columns=["Filter", "Value"]))
     
+        display_columns = ['property_name', 'comp', 'comp_property', 'revpasf', 'manager', 'owner', 'property_address', 'city', 'state', 'market_name', 'submarket_name',
+                                'unit_count', 'number_of_stories', 'style', 'building_age', 'years_since_reno', 'years_since_acquisition',
+                                'property_quality', 'studio_rent', 'onebed_rent', 'twobed_rent', 'threebed_rent']
+        
+        for key in tool_args:
+            if key.endswith("_filter"):
+                base_col = key.replace("_filter", "")
+                if base_col in filtered.columns and base_col not in display_columns:
+                    display_columns.append(base_col)
+
         with st.expander("Properties found:"):
-            display_df = filtered[['property_name', 'comp', 'comp_property', 'revpasf', 'manager', 'owner', 'property_address', 'city', 'state', 'market_name', 'submarket_name',
-                                   'unit_count', 'number_of_stories', 'style', 'building_age', 'years_since_reno', 'years_since_acquisition',
-                                   'property_quality', 'studio_rent', 'onebed_rent', 'twobed_rent', 'threebed_rent' ]]
-            
+            display_df = filtered[display_columns]
             st.dataframe(display_df)
 
     except Exception as e:
         st.error(f"Something went wrong:\n\n{str(e)}")
 
-    filtered['Details'] = filtered.apply(lambda row: make_details(row, comp='comp_property' in row), axis=1)
+    filtered['Details'] = filtered.apply(lambda row: make_details(row), axis=1)
 
     center_lat = filtered['latitude'].mean()
     center_lon = filtered['longitude'].mean()
